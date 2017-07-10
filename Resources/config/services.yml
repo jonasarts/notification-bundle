@@ -1,0 +1,7 @@
+parameters:
+    app.notification_service.class: jonasarts\Bundle\NotificationBundle\Services\NotificationService
+
+services:
+    notification:
+        class: "%app.notification_service.class%"
+        arguments:  ["@mailer", "@twig", "%kernel.root_dir%", "@templating", "%notification.from%", "%notification.sender%", "%notification.reply_to%", "%notification.subject_prefix%" ]

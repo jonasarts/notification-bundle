@@ -16,12 +16,24 @@ namespace jonasarts\Bundle\NotificationBundle\Services;
  */
 class NotificationService
 {
+    /**
+     * @var \Swift_Mailer;
+     */
     private $mailer;
 
+    /**
+     * @var \Twig_Environment
+     */
     private $twig;
 
+    /**
+     * @var string
+     */
     private $kernel_root_dir;
 
+    /**
+     * @var 'Twig Templating Service'
+     */
     private $templating;
 
     /**
@@ -70,6 +82,25 @@ class NotificationService
         $this->subject_prefix = $parameter_subject_prefix;
 
         $this->numSent = 0;
+    }
+
+    /**
+     * @param \Swift_Mailer $mailer
+     * @return self
+     */
+    public function setMailer(\Swift_Mailer $mailer)
+    {
+        $this->mailer = $mailer;
+
+        return $this;
+    }
+
+    /**
+     * @var \Swift_Mailer $mailer
+     */
+    public function getMailer()
+    {
+        return $this->mailer;
     }
 
     /**

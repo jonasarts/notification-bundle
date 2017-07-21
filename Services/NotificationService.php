@@ -260,6 +260,16 @@ class NotificationService
     }
 
     /**
+     * @return self
+     */
+    public function resetMessagesCount()
+    {
+        $this->numSent = 0;
+
+        return $this;
+    }
+
+    /**
      * private methods
      */
 

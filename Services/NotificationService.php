@@ -106,6 +106,17 @@ class NotificationService
     }
 
     /**
+     * $param string $prefix
+     * @return self
+     */
+    public function setSubjectPrefix($prefix)
+    {
+        $this->subject_prefix = $prefix;
+
+        return $this;
+    }
+
+    /**
      * Send message - based on a twig template
      * 
      * @param string $template
@@ -199,14 +210,17 @@ class NotificationService
         $html = null;
         $plain = null;
 
-        $subject_template = $this->twig->createTemplate($subject);
+        $env = clone $this->twig;
+        $env->setCache(false);
+
+        $subject_template = $env->createTemplate($subject);
         $subject = $subject_template->render($data);
 
         if (is_array($templateStrings)) {
             // array with 'html' => htmlString & 'txt' => txtString twig template strings
             if (array_key_exists('html', $templateStrings)) {
                 // render mail body
-                $template = $this->twig->createTemplate($templateStrings['html']);
+                $template = $env->createTemplate($templateStrings['html']);
 
                 $html = $template->render(
                     $data
@@ -214,7 +228,7 @@ class NotificationService
             }
             if (array_key_exists('plain', $templateStrings)) {
                 // render mail body
-                $template = $this->twig->createTemplate($templateStrings['plain']);
+                $template = $env->createTemplate($templateStrings['plain']);
 
                 $plain = $template->render(
                     $data
@@ -222,7 +236,7 @@ class NotificationService
             }
             if (array_key_exists('txt', $templateStrings)) {
                 // render mail body
-                $template = $this->twig->createTemplate($templateStrings['txt']);
+                $template = $env->createTemplate($templateStrings['txt']);
 
                 $plain = $template->render(
                     $data
@@ -313,7 +327,11 @@ class NotificationService
         }
 
         // subject (incl. prefix)
-        $message->setSubject($this->subject_prefix . $subject);
+        if (empty($this->subject_prefix)) {
+            $message->setSubject($subject);
+        } else {
+            $message->setSubject($this->subject_prefix . $subject);
+        }
 
         /*
         // always embed logo - this needs special processing

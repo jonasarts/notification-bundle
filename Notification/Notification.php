@@ -27,6 +27,11 @@ class Notification
     private $twig;
 
     /**
+     * @var \Symfony\Bundle\TwigBundle\TwigEngine
+     */
+    private $templating;
+
+    /**
      * @var string
      */
     private $kernel_root_dir;
@@ -76,10 +81,11 @@ class Notification
     /**
      * Constructor
      */
-    public function __construct(\Swift_Mailer $mailer, \Twig_Environment $twig, $kernel_root_dir, $parameter_from, $parameter_sender, $parameter_reply_to, $parameter_return_path, $parameter_subject_prefix)
+    public function __construct(\Swift_Mailer $mailer, \Twig_Environment $twig, \Symfony\Bundle\TwigBundle\TwigEngine $templating, $kernel_root_dir, $parameter_from, $parameter_sender, $parameter_reply_to, $parameter_return_path, $parameter_subject_prefix)
     {
         $this->mailer = $mailer;
         $this->twig = $twig;
+        $this->templating = $templating;
         $this->kernel_root_dir = $kernel_root_dir;
 
         $this->from = $parameter_from;
@@ -215,7 +221,7 @@ class Notification
         $subject_template = $this->twig->createTemplate($subject);
         $subject = $subject_template->render($data);
 
-        if ($this->twig->exists($template.'.html.twig')) {
+        if ($this->templating->exists($template.'.html.twig')) {
             // render mail body
             $html = $this->twig->render(
                 $template.'.html.twig',
@@ -223,7 +229,7 @@ class Notification
                 );
         }
 
-        if ($this->twig->exists($template.'.txt.twig')) {
+        if ($this->templating->exists($template.'.txt.twig')) {
             // render mail body
             $plain = $this->twig->render(
                 $template.'.txt.twig',

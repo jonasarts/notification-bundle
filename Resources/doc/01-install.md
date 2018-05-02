@@ -33,6 +33,15 @@ class AppKernel extends Kernel
 }
 ```
 
+## Enable the Twig templating engine
+
+```yaml
+#app/config/config.yml
+framework:
+    templating:
+        engines: ['twig']
+```
+
 ## Configuration options
 
 [Read the bundle configuration options](02-configuration.md)

@@ -1,7 +1,12 @@
 CHANGE LOG
 ==========
 
+V 4.0.0
+-------
+- Requires now >= PHP 7.1 and >= Symfony 4.0
+- Added configuration option for return_path
+
 V 1.0.0
 -------
 
-- Initial
+- Initial release

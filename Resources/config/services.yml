@@ -1,7 +1,11 @@
 parameters:
-    app.notification_service.class: jonasarts\Bundle\NotificationBundle\Services\NotificationService
+    app.notification_service.class: jonasarts\Bundle\NotificationBundle\Notification\Notification
 
 services:
     notification:
         class: "%app.notification_service.class%"
-        arguments:  ["@mailer", "@twig", "%kernel.root_dir%", "@templating", "%notification.from%", "%notification.sender%", "%notification.reply_to%", "%notification.subject_prefix%" ]
+        arguments:  ["@mailer", "@twig", "%kernel.root_dir%", "%notification.from%", "%notification.sender%", "%notification.reply_to%", "%notification.return_path%", "%notification.subject_prefix%" ]
+        public: true
+
+    jonasarts\Bundle\NotificationBundle\Notification\Notification: 
+        arguments:  ["@mailer", "@twig", "%kernel.root_dir%", "%notification.from%", "%notification.sender%", "%notification.reply_to%", "%notification.return_path%", "%notification.subject_prefix%" ]

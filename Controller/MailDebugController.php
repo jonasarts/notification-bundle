@@ -12,8 +12,6 @@
 namespace jonasarts\Bundle\NotificationBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-//use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -21,7 +19,6 @@ use Symfony\Component\HttpFoundation\Request;
  * MailDebugController
  * 
  * @Route("/_debug/mail")
- * -Security("has_role('ROLE_ADMIN')")
  */
 class MailDebugController extends Controller
 {

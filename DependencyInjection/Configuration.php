@@ -81,6 +81,10 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
 
+                ->scalarNode('return_path')
+                    ->defaultNull()
+                ->end()
+
                 // optional subject prefix
                 ->scalarNode('subject_prefix')
                     ->defaultNull()

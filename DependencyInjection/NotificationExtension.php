@@ -47,6 +47,7 @@ class NotificationExtension extends Extension
         } else {
             $container->setParameter('notification.reply_to', null);
         }
+        $container->setParameter('notification.return_path', $config['return_path']);
         $container->setParameter('notification.subject_prefix', $config['subject_prefix']);
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));

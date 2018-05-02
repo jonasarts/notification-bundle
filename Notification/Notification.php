@@ -9,12 +9,12 @@
  * with this source code in the file LICENSE.
  */
 
-namespace jonasarts\Bundle\NotificationBundle\Services;
+namespace jonasarts\Bundle\NotificationBundle\Notification;
 
 /**
- * NotificationService
+ * Notification
  */
-class NotificationService
+class Notification
 {
     /**
      * @var \Swift_Mailer;
@@ -30,11 +30,6 @@ class NotificationService
      * @var string
      */
     private $kernel_root_dir;
-
-    /**
-     * @var 'Twig Templating Service'
-     */
-    private $templating;
 
     /**
      * configuration parameter 'from' - from address
@@ -58,6 +53,15 @@ class NotificationService
     private $reply_to;
 
     /**
+     * configuration parameter 'return_path'
+     * 
+     * - not an array !!!
+     * 
+     * @var string
+     */
+    private $return_path;
+
+    /**
      * configuration parameter subject_prefix - subject prefix string
      * 
      * @var string
@@ -69,16 +73,20 @@ class NotificationService
      */
     private $numSent;
 
-    public function __construct(\Swift_Mailer $mailer, \Twig_Environment $twig, $kernel_root_dir, $templating, $parameter_from, $parameter_sender, $parameter_reply_to, $parameter_subject_prefix)
+    /**
+     * Constructor
+     */
+    public function __construct(\Swift_Mailer $mailer, \Twig_Environment $twig, $kernel_root_dir, $parameter_from, $parameter_sender, $parameter_reply_to, $parameter_return_path, $parameter_subject_prefix)
     {
         $this->mailer = $mailer;
         $this->twig = $twig;
         $this->kernel_root_dir = $kernel_root_dir;
-        $this->templating = $templating;
 
         $this->from = $parameter_from;
         $this->sender = $parameter_sender;
         $this->reply_to = $parameter_reply_to;
+        $this->return_path = $parameter_return_path;
+
         $this->subject_prefix = $parameter_subject_prefix;
 
         $this->numSent = 0;
@@ -104,7 +112,7 @@ class NotificationService
     }
 
     /**
-     * $param array|string $from
+     * @param array|string $from
      * @return self
      */
     public function setFrom($from)
@@ -115,7 +123,7 @@ class NotificationService
     }
 
     /**
-     * $param array|string $sender
+     * @param array|string $sender
      * @return self
      */
     public function setSender($sender)
@@ -126,7 +134,7 @@ class NotificationService
     }
 
     /**
-     * $param array|string $reply_to
+     * @param array|string $reply_to
      * @return self
      */
     public function setReplyTo($reply_to)
@@ -137,7 +145,18 @@ class NotificationService
     }
 
     /**
-     * $param string $prefix
+     * @param string $return_path
+     * @return self
+     */
+    public function setReturnPath($return_path)
+    {
+        $this->return_path = $return_path;
+
+        return $this;
+    }
+
+    /**
+     * @param string $prefix
      * @return self
      */
     public function setSubjectPrefix($prefix)
@@ -196,7 +215,7 @@ class NotificationService
         $subject_template = $this->twig->createTemplate($subject);
         $subject = $subject_template->render($data);
 
-        if ($this->templating->exists($template.'.html.twig')) {
+        if ($this->twig->exists($template.'.html.twig')) {
             // render mail body
             $html = $this->twig->render(
                 $template.'.html.twig',
@@ -204,7 +223,7 @@ class NotificationService
                 );
         }
 
-        if ($this->templating->exists($template.'.txt.twig')) {
+        if ($this->twig->exists($template.'.txt.twig')) {
             // render mail body
             $plain = $this->twig->render(
                 $template.'.txt.twig',
@@ -241,8 +260,11 @@ class NotificationService
         $html = null;
         $plain = null;
 
-        $env = clone $this->twig;
-        $env->setCache(false);
+        //$env = clone $this->twig;
+        //$env->setCache(false);
+
+        $loader = new \Twig_Loader_Array(array());
+        $env = new \Twig_Environment($loader, array('cache' => false, 'debug' => false));
 
         $subject_template = $env->createTemplate($subject);
         $subject = $subject_template->render($data);
@@ -337,8 +359,9 @@ class NotificationService
         $from = $this->from;
         $sender = $this->sender;
         $reply_to = $this->reply_to;
+        $return_path = $this->return_path; // not an array!
 
-        $message = \Swift_Message::newInstance()
+        $message = (new \Swift_Message())
             ->setFrom($from) // from
             ;
 
@@ -349,6 +372,10 @@ class NotificationService
         if (!empty($reply_to)) {
             $message
                 ->setReplyTo($reply_to);
+        }
+        if (!empty($return_path)) {
+            $message
+                ->setReturnPath($return_path);
         }
 
         foreach ($recipients as $key => $value) {

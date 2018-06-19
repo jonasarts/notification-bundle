@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the jonasarts Notification bundle package.
  *
@@ -102,7 +104,7 @@ class Notification
      * @param \Swift_Mailer $mailer
      * @return self
      */
-    public function setMailer(\Swift_Mailer $mailer)
+    public function setMailer(\Swift_Mailer $mailer): self
     {
         $this->mailer = $mailer;
 
@@ -112,7 +114,7 @@ class Notification
     /**
      * @var \Swift_Mailer $mailer
      */
-    public function getMailer()
+    public function getMailer(): \Swift_Mailer
     {
         return $this->mailer;
     }
@@ -121,7 +123,7 @@ class Notification
      * @param array|string $from
      * @return self
      */
-    public function setFrom($from)
+    public function setFrom($from): self
     {
         $this->from = $from;
 
@@ -132,7 +134,7 @@ class Notification
      * @param array|string $sender
      * @return self
      */
-    public function setSender($sender)
+    public function setSender($sender): self
     {
         $this->sender = $sender;
 
@@ -143,7 +145,7 @@ class Notification
      * @param array|string $reply_to
      * @return self
      */
-    public function setReplyTo($reply_to)
+    public function setReplyTo($reply_to): self
     {
         $this->reply_to = $reply_to;
 
@@ -154,7 +156,7 @@ class Notification
      * @param string $return_path
      * @return self
      */
-    public function setReturnPath($return_path)
+    public function setReturnPath(string $return_path): self
     {
         $this->return_path = $return_path;
 
@@ -165,7 +167,7 @@ class Notification
      * @param string $prefix
      * @return self
      */
-    public function setSubjectPrefix($prefix)
+    public function setSubjectPrefix(string $prefix): self
     {
         $this->subject_prefix = $prefix;
 
@@ -177,9 +179,10 @@ class Notification
      * 
      * @param string $template
      * @param array|string $to
+     * @param string $subject
      * @param array $data
      */
-    public function sendTemplateMessage($template, $to, $subject, array $data)
+    public function sendTemplateMessage(string $template, $to, string $subject, array $data)
     {
         $this->sendTemplateMessageA($template, array('to' => $to), $subject, $data);
     }
@@ -189,9 +192,10 @@ class Notification
      * 
      * @param array $templateStrings   array( html => , txt => )
      * @param array|string $to
+     * @param string $subject
      * @param array $data
      */
-    public function sendTemplateStringMessage(array $templateStrings, $to, $subject, array $data)
+    public function sendTemplateStringMessage(array $templateStrings, $to, string $subject, array $data)
     {
         $this->sendTemplateStringMessageA($templateStrings, array('to' => $to), $subject, $data);
     }
@@ -201,11 +205,11 @@ class Notification
      * 
      * @param string $template
      * @param array $recipients    array( array|string, ... )
-     * @param array|string $to
+     * @param string $subject
      * @param array $data
      * @param array $attachments   array w. file paths
      */
-    public function sendTemplateMessageA($template, array $recipients, $subject, array $data, $attachments = array())
+    public function sendTemplateMessageA($template, array $recipients, string $subject, array $data, array $attachments = array())
     {
         // auto-create variables subject & subject_underline
         if (!array_key_exists('subject', $data)) {
@@ -238,7 +242,7 @@ class Notification
         }
 
         if (is_null($html) && is_null($plain)) {
-            return;
+            throw new \Exception('NotificationService.sendTemplateMessageA: no template rendered');
         }
 
         $this->sendMessageA($this->from, $recipients, $subject, $html, $plain, $attachments);
@@ -249,11 +253,11 @@ class Notification
      * 
      * @param array $templateStrings   array( html => , txt => )
      * @param array $recipients        array( array|string, ... )
-     * @param array|string $to
+     * @param string $subject
      * @param array $data
      * @param array $attachments       array w. file paths
      */
-    public function sendTemplateStringMessageA(array $templateStrings, array $recipients, $subject, array $data, $attachments = array())
+    public function sendTemplateStringMessageA(array $templateStrings, array $recipients, string $subject, array $data, array $attachments = array())
     {
         // auto-create variables subject & subject_underline
         if (!array_key_exists('subject', $data)) {
@@ -304,7 +308,7 @@ class Notification
         }
 
         if (is_null($html) && is_null($plain)) {
-            return;
+            throw new \Exception('NotificationService.sendTemplateStringMessageA: no template rendered');
         }
 
         $this->sendMessageA($this->from, $recipients, $subject, $html, $plain, $attachments);
@@ -313,7 +317,7 @@ class Notification
     /**
      * @return int
      */
-    public function sentMessagesCount()
+    public function sentMessagesCount(): int
     {
         return $this->numSent;
     }
@@ -321,7 +325,7 @@ class Notification
     /**
      * @return self
      */
-    public function resetMessagesCount()
+    public function resetMessagesCount(): self
     {
         $this->numSent = 0;
 
@@ -333,9 +337,9 @@ class Notification
      */
 
     /**
-     * 
+     * @return void
      */
-    private function sendMessage($from, $to, $subject, $html = null, $plain = null)
+    private function sendMessage($from, $to, string $subject, string $html = null, string $plain = null)
     {
         if (!is_array($to) && trim($to) === '') {
             throw new \Exception('NotificationService.sendMessage: recipient address missing');
@@ -345,9 +349,9 @@ class Notification
     }
 
     /**
-     * 
+     * @return void
      */
-    private function sendMessageA($from, array $recipients, $subject, $html = null, $plain = null, $attachments = array())
+    private function sendMessageA($from, array $recipients, string $subject, string $html = null, string $plain = null, array $attachments = array())
     {
         if (!is_array($from) && trim($from) === '') {
             throw new \Exception('NotificationService.sendMessageA: from address missing');

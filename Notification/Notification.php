@@ -43,21 +43,23 @@ class Notification implements NotificationInterface
     /**
      * configuration parameter 'from' - from address
      * 
-     * @var array|string
+     * Can technically be null, but MUST BE SET before sending mail!
+     * 
+     * @var array|string|null
      */
     private $from;
 
     /**
      * configuration parameter 'sender' - sender address
      * 
-     * @var array|string
+     * @var array|string|null
      */
     private $sender;
 
     /**
      * configuration parameter 'reply_to' - sender address
      * 
-     * @var array|string
+     * @var array|string|null
      */
     private $reply_to;
 
@@ -66,14 +68,14 @@ class Notification implements NotificationInterface
      * 
      * - not an array !!!
      * 
-     * @var string
+     * @var string|null
      */
     private $return_path;
 
     /**
      * configuration parameter subject_prefix - subject prefix string
      * 
-     * @var string
+     * @var string|null
      */
     private $subject_prefix;
 
@@ -85,7 +87,7 @@ class Notification implements NotificationInterface
     /**
      * Constructor
      */
-    public function __construct(\Swift_Mailer $mailer, \Twig_Environment $twig, \Symfony\Component\Templating\EngineInterface $templating, string $kernel_root_dir, $parameter_from, $parameter_sender, $parameter_reply_to, string $parameter_return_path, string $parameter_subject_prefix)
+    public function __construct(\Swift_Mailer $mailer, \Twig_Environment $twig, \Symfony\Component\Templating\EngineInterface $templating, string $kernel_root_dir, $parameter_from, $parameter_sender, $parameter_reply_to, ?string $parameter_return_path, ?string $parameter_subject_prefix)
     {
         $this->mailer = $mailer;
         $this->twig = $twig;
@@ -122,7 +124,7 @@ class Notification implements NotificationInterface
     }
 
     /**
-     * @param array|string $from
+     * @param array|string|null $from
      * @return self
      */
     public function setFrom($from): NotificationInterface
@@ -133,7 +135,7 @@ class Notification implements NotificationInterface
     }
 
     /**
-     * @param array|string $sender
+     * @param array|string|null $sender
      * @return self
      */
     public function setSender($sender): NotificationInterface
@@ -144,7 +146,7 @@ class Notification implements NotificationInterface
     }
 
     /**
-     * @param array|string $reply_to
+     * @param array|string|null $reply_to
      * @return self
      */
     public function setReplyTo($reply_to): NotificationInterface
@@ -155,10 +157,10 @@ class Notification implements NotificationInterface
     }
 
     /**
-     * @param string $return_path
+     * @param string|null $return_path
      * @return self
      */
-    public function setReturnPath(string $return_path): NotificationInterface
+    public function setReturnPath(?string $return_path): NotificationInterface
     {
         $this->return_path = $return_path;
 
@@ -166,10 +168,10 @@ class Notification implements NotificationInterface
     }
 
     /**
-     * @param string $prefix
+     * @param string|null $prefix
      * @return self
      */
-    public function setSubjectPrefix(string $prefix): NotificationInterface
+    public function setSubjectPrefix(?string $prefix): NotificationInterface
     {
         $this->subject_prefix = $prefix;
 
@@ -244,7 +246,7 @@ class Notification implements NotificationInterface
         }
 
         if (is_null($html) && is_null($plain)) {
-            throw new \Exception('NotificationService.sendTemplateMessageA: no template rendered');
+            throw new \Exception('NotificationService.sendTemplateMessageA: no template rendered ('.$template.')');
         }
 
         $this->sendMessageA($recipients, $subject, $html, $plain, $attachments);
@@ -355,17 +357,20 @@ class Notification implements NotificationInterface
      */
     private function sendMessageA(array $recipients, string $subject, string $html = null, string $plain = null, array $attachments = array())
     {
+        // at least one recipient present?
         if (count($recipients) == 0) {
             throw new \Exception('NotificationService.sendMessageA: recipient address missing');
         }
+        // a subject provided?
         if (trim($subject) === '') {
             throw new \Exception('NotificationService.sendMessageA: subject missing');
         }
+        // content provided?
         if (is_null($html) && is_null($plain)) {
             throw new \Exception('NotificationService.sendMessageA: content missing');
         }
 
-        // test from - required value !
+        // from provided? - required value !
         // sender and reply_to and return_path are optional
         if (empty($this->from)) {
             throw new \Exception('NotificationService.sendMessageA: from address missing');

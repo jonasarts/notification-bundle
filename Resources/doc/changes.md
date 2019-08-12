@@ -1,6 +1,10 @@
 CHANGE LOG
 ==========
 
+V 4.0.6
+-------
+- Updated TreeBuilder to support Symfony 5.0
+
 V 4.0.0
 -------
 - Requires now >= PHP 7.1 and >= Symfony 4.0

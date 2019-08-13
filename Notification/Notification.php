@@ -26,14 +26,9 @@ class Notification implements NotificationInterface
     private $mailer;
 
     /**
-     * @var \Twig_Environment
+     * @var \Twig\Environment
      */
     private $twig;
-
-    /**
-     * @var \Symfony\Component\Templating\EngineInterface
-     */
-    private $templating;
 
     /**
      * @var string
@@ -42,39 +37,39 @@ class Notification implements NotificationInterface
 
     /**
      * configuration parameter 'from' - from address
-     * 
+     *
      * Can technically be null, but MUST BE SET before sending mail!
-     * 
+     *
      * @var array|string|null
      */
     private $from;
 
     /**
      * configuration parameter 'sender' - sender address
-     * 
+     *
      * @var array|string|null
      */
     private $sender;
 
     /**
      * configuration parameter 'reply_to' - sender address
-     * 
+     *
      * @var array|string|null
      */
     private $reply_to;
 
     /**
      * configuration parameter 'return_path'
-     * 
+     *
      * - not an array !!!
-     * 
+     *
      * @var string|null
      */
     private $return_path;
 
     /**
      * configuration parameter subject_prefix - subject prefix string
-     * 
+     *
      * @var string|null
      */
     private $subject_prefix;
@@ -87,11 +82,10 @@ class Notification implements NotificationInterface
     /**
      * Constructor
      */
-    public function __construct(\Swift_Mailer $mailer, \Twig_Environment $twig, \Symfony\Component\Templating\EngineInterface $templating, string $kernel_root_dir, $parameter_from, $parameter_sender, $parameter_reply_to, ?string $parameter_return_path, ?string $parameter_subject_prefix)
+    public function __construct(\Swift_Mailer $mailer, \Twig\Environment $twig, string $kernel_root_dir, $parameter_from, $parameter_sender, $parameter_reply_to, ?string $parameter_return_path, ?string $parameter_subject_prefix)
     {
         $this->mailer = $mailer;
         $this->twig = $twig;
-        $this->templating = $templating;
         $this->kernel_root_dir = $kernel_root_dir;
 
         $this->from = $parameter_from;
@@ -180,7 +174,7 @@ class Notification implements NotificationInterface
 
     /**
      * Send message - based on a twig template
-     * 
+     *
      * @param string $template
      * @param array|string $to
      * @param string $subject
@@ -193,7 +187,7 @@ class Notification implements NotificationInterface
 
     /**
      * Send message - based on a template strings (html & txt template string)
-     * 
+     *
      * @param array $templateStrings   array( html => , txt => )
      * @param array|string $to
      * @param string $subject
@@ -206,7 +200,7 @@ class Notification implements NotificationInterface
 
     /**
      * Send message - based on a twig template - with (optional) attachment
-     * 
+     *
      * @param string $template
      * @param array $recipients    array( array|string, ... )
      * @param string $subject
@@ -229,7 +223,7 @@ class Notification implements NotificationInterface
         $subject_template = $this->twig->createTemplate($subject);
         $subject = $subject_template->render($data);
 
-        if ($this->templating->exists($template.'.html.twig')) {
+        if ($this->twig->getLoader()->exists($template.'.html.twig')) {
             // render mail body
             $html = $this->twig->render(
                 $template.'.html.twig',
@@ -237,7 +231,7 @@ class Notification implements NotificationInterface
                 );
         }
 
-        if ($this->templating->exists($template.'.txt.twig')) {
+        if ($this->twig->getLoader()->exists($template.'.txt.twig')) {
             // render mail body
             $plain = $this->twig->render(
                 $template.'.txt.twig',
@@ -254,7 +248,7 @@ class Notification implements NotificationInterface
 
     /**
      * Send message - based on a template strings - with (optional) attachment
-     * 
+     *
      * @param array $templateStrings   array( html => , txt => )
      * @param array $recipients        array( array|string, ... )
      * @param string $subject
@@ -348,7 +342,7 @@ class Notification implements NotificationInterface
         if (!is_array($to) && trim($to) === '') {
             throw new \Exception('NotificationService.sendMessage: recipient address missing');
         }
-        
+
         $this->sendMessageA(array('to' => $to), $subject, $html, $plain);
     }
 

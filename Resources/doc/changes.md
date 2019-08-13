@@ -1,6 +1,11 @@
 CHANGE LOG
 ==========
 
+V 4.0.7
+-------
+
+- Removed templating as Symfony deprecated it
+
 V 4.0.6
 -------
 - Updated TreeBuilder to support Symfony 5.0

@@ -1,7 +1,7 @@
 CHANGE LOG
 ==========
 
-V 4.0.7
+V 4.0.8
 -------
 
 - Removed templating as Symfony deprecated it

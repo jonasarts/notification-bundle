@@ -82,10 +82,9 @@ class Notification implements NotificationInterface
     /**
      * Constructor
      */
-    public function __construct(\Swift_Mailer $mailer, \Twig\Environment $twig, string $kernel_root_dir, $parameter_from, $parameter_sender, $parameter_reply_to, ?string $parameter_return_path, ?string $parameter_subject_prefix)
+    public function __construct(\Swift_Mailer $mailer, string $kernel_root_dir, array $parameter_template, $parameter_from, $parameter_sender, $parameter_reply_to, ?string $parameter_return_path, ?string $parameter_subject_prefix)
     {
         $this->mailer = $mailer;
-        $this->twig = $twig;
         $this->kernel_root_dir = $kernel_root_dir;
 
         $this->from = $parameter_from;
@@ -96,6 +95,15 @@ class Notification implements NotificationInterface
         $this->subject_prefix = $parameter_subject_prefix;
 
         $this->numSent = 0;
+
+        // create twig environment
+        if ($parameter_template['loader'] == 'filesystem') {
+            $loader = new \Twig\Loader\FilesystemLoader($parameter_template['path']);
+            $this->twig = new \Twig\Environment($loader, array('cache' => false, 'debug' => false, 'use_strict_variables' => false));
+        } else {
+            $loader = new \Twig\Loader\ArrayLoader(array());
+            $this->twig = new \Twig\Environment($loader, array('cache' => false, 'debug' => false, 'use_strict_variables' => false));
+        }
     }
 
     /**
@@ -268,20 +276,14 @@ class Notification implements NotificationInterface
         $html = null;
         $plain = null;
 
-        //$env = clone $this->twig;
-        //$env->setCache(false);
-
-        $loader = new \Twig_Loader_Array(array());
-        $env = new \Twig_Environment($loader, array('cache' => false, 'debug' => false));
-
-        $subject_template = $env->createTemplate($subject);
+        $subject_template = $this->twig->createTemplate($subject);
         $subject = $subject_template->render($data);
 
         if (is_array($templateStrings)) {
             // array with 'html' => htmlString & 'txt' => txtString twig template strings
             if (array_key_exists('html', $templateStrings)) {
                 // render mail body
-                $template = $env->createTemplate($templateStrings['html']);
+                $template = $this->twig->createTemplate($templateStrings['html']);
 
                 $html = $template->render(
                     $data
@@ -289,7 +291,7 @@ class Notification implements NotificationInterface
             }
             if (array_key_exists('plain', $templateStrings)) {
                 // render mail body
-                $template = $env->createTemplate($templateStrings['plain']);
+                $template = $this->twig->createTemplate($templateStrings['plain']);
 
                 $plain = $template->render(
                     $data
@@ -297,7 +299,7 @@ class Notification implements NotificationInterface
             }
             if (array_key_exists('txt', $templateStrings)) {
                 // render mail body
-                $template = $env->createTemplate($templateStrings['txt']);
+                $template = $this->twig->createTemplate($templateStrings['txt']);
 
                 $plain = $template->render(
                     $data

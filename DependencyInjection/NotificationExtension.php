@@ -32,6 +32,9 @@ class NotificationExtension extends Extension
         $config = $this->processConfiguration($configuration, $configs);
 
         // apply config
+        $container->setParameter('notification.template', $config['template']);
+        $container->setParameter('notification.template.loader', $config['template']['loader']);
+        $container->setParameter('notification.template.path', $config['template']['path']);
         $container->setParameter('notification.from', array($config['from']['address'] => $config['from']['name']));
         if (!empty($config['sender']['address'] && !empty($config['sender']['name']))) {
             $container->setParameter('notification.sender', array($config['sender']['address'] => $config['sender']['name']));

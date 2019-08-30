@@ -31,6 +31,19 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
+                ->arrayNode('template')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+
+                        ->scalarNode('loader')
+                            ->defaultValue('filesystem')
+                            ->end()
+                        ->scalarNode('path')
+                            ->defaultNull()
+                            ->end()
+                    ->end()
+                ->end()
+
                 ->arrayNode('from')
                     ->addDefaultsIfNotSet()
                     ->children()

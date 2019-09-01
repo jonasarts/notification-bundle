@@ -15,7 +15,7 @@ namespace jonasarts\Bundle\NotificationBundle\Notification;
 
 /**
  * NotificationInterface.
- * 
+ *
  * Interface to the notification service
  */
 interface NotificationInterface
@@ -33,4 +33,6 @@ interface NotificationInterface
 
     public function sentMessagesCount(): int;
     public function resetMessagesCount(): self;
+
+    public function getTwig(): \Twig\Environment;
 }

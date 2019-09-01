@@ -333,6 +333,14 @@ class Notification implements NotificationInterface
     }
 
     /**
+     * @return \Twig\Environment
+     */
+    public function getTwig(): \Twig\Environment
+    {
+        return $this->twig;
+    }
+
+    /**
      * private methods
      */
 

@@ -213,9 +213,10 @@ class Notification implements NotificationInterface
      * @param array $recipients    array( array|string, ... )
      * @param string $subject
      * @param array $data
+     * @param array $additonal_headers
      * @param array $attachments   array w. file paths
      */
-    public function sendTemplateMessageA($template, array $recipients, string $subject, array $data, array $attachments = array())
+    public function sendTemplateMessageA($template, array $recipients, string $subject, array $data, array $additonal_headers = array(), array $attachments = array())
     {
         // auto-create variables subject & subject_underline
         if (!array_key_exists('subject', $data)) {
@@ -251,7 +252,7 @@ class Notification implements NotificationInterface
             throw new \Exception('NotificationService.sendTemplateMessageA: no template rendered ('.$template.')');
         }
 
-        $this->sendMessageA($recipients, $subject, $html, $plain, $attachments);
+        $this->sendMessageA($recipients, $subject, $html, $plain, $additonal_headers, $attachments);
     }
 
     /**
@@ -261,9 +262,10 @@ class Notification implements NotificationInterface
      * @param array $recipients        array( array|string, ... )
      * @param string $subject
      * @param array $data
+     * @param array $additonal_headers
      * @param array $attachments       array w. file paths
      */
-    public function sendTemplateStringMessageA(array $templateStrings, array $recipients, string $subject, array $data, array $attachments = array())
+    public function sendTemplateStringMessageA(array $templateStrings, array $recipients, string $subject, array $data, array $additonal_headers = array(), array $attachments = array())
     {
         // auto-create variables subject & subject_underline
         if (!array_key_exists('subject', $data)) {
@@ -287,7 +289,7 @@ class Notification implements NotificationInterface
 
                 $html = $template->render(
                     $data
-                    );
+                );
             }
             if (array_key_exists('plain', $templateStrings)) {
                 // render mail body
@@ -295,7 +297,7 @@ class Notification implements NotificationInterface
 
                 $plain = $template->render(
                     $data
-                    );
+                );
             }
             if (array_key_exists('txt', $templateStrings)) {
                 // render mail body
@@ -303,7 +305,7 @@ class Notification implements NotificationInterface
 
                 $plain = $template->render(
                     $data
-                    );
+                );
             }
         }
 
@@ -311,7 +313,7 @@ class Notification implements NotificationInterface
             throw new \Exception('NotificationService.sendTemplateStringMessageA: no template rendered');
         }
 
-        $this->sendMessageA($recipients, $subject, $html, $plain, $attachments);
+        $this->sendMessageA($recipients, $subject, $html, $plain, $additonal_headers, $attachments);
     }
 
     /**
@@ -359,7 +361,7 @@ class Notification implements NotificationInterface
     /**
      * @return void
      */
-    private function sendMessageA(array $recipients, string $subject, string $html = null, string $plain = null, array $attachments = array())
+    private function sendMessageA(array $recipients, string $subject, string $html = null, string $plain = null, array $additonal_headers = array(), array $attachments = array())
     {
         // at least one recipient present?
         if (count($recipients) == 0) {
@@ -415,6 +417,16 @@ class Notification implements NotificationInterface
                     break;
                 default:
                     throw new \Exception('NotificationService.sendMessageA: invalid recipient type ('.$key.')');
+            }
+        }
+
+        // headers processing - optional
+        $headers = $message->getHeaders();
+        foreach ($additonal_headers as $key => $value) {
+            if ($headers->has($key)) {
+                $headers->get($key)->setValue($value);
+            } else {
+                $headers->addTextHeader($key, $value);
             }
         }
 

@@ -187,10 +187,12 @@ class Notification implements NotificationInterface
      * @param array|string $to
      * @param string $subject
      * @param array $data
+     * @param array $additonal_headers
+     * @param array $attachments   array w. file paths
      */
-    public function sendTemplateMessage(string $template, $to, string $subject, array $data)
+    public function sendTemplateMessage(string $template, $to, string $subject, array $data, array $additonal_headers = array(), array $attachments = array())
     {
-        $this->sendTemplateMessageA($template, array('to' => $to), $subject, $data);
+        $this->sendTemplateMessageA($template, array('to' => $to), $subject, $data, $additonal_headers, $attachments);
     }
 
     /**
@@ -200,10 +202,12 @@ class Notification implements NotificationInterface
      * @param array|string $to
      * @param string $subject
      * @param array $data
+     * @param array $additonal_headers
+     * @param array $attachments       array w. file paths
      */
-    public function sendTemplateStringMessage(array $templateStrings, $to, string $subject, array $data)
+    public function sendTemplateStringMessage(array $templateStrings, $to, string $subject, array $data, array $additonal_headers = array(), array $attachments = array())
     {
-        $this->sendTemplateStringMessageA($templateStrings, array('to' => $to), $subject, $data);
+        $this->sendTemplateStringMessageA($templateStrings, array('to' => $to), $subject, $data, $additonal_headers, $attachments);
     }
 
     /**

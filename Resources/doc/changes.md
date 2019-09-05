@@ -1,7 +1,7 @@
 CHANGE LOG
 ==========
 
-V 4.2.0
+V 4.2.1
 -------
 - Added additional_header field to message sending methods (BC)
 

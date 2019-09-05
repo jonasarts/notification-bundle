@@ -1,6 +1,15 @@
 CHANGE LOG
 ==========
 
+V 4.2.0
+-------
+- Added additional_header field to message sending methods (BC)
+
+V 4.1.1
+-------
+- Added method to get twig environment of notification service
+- Introduces twig engine configuration (BC)
+
 V 4.0.8
 -------
 

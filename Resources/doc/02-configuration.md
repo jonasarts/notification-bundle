@@ -6,6 +6,9 @@ Configure the bundle options
 ```yaml
 #app/config/config.yml
 notification:
+    template:
+        loader: filesystem
+        path: ../templates
     from:
         address: nobody@domain.tld
         name: Mr. Nobody

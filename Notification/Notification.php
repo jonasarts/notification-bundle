@@ -451,7 +451,27 @@ class Notification implements NotificationInterface
 
         // attachment processing - optional
         foreach ($attachments as $file) {
-            if (file_exists($file)) {
+            if (get_class($file) == "Fpdf\Fpdf") {
+              // get a clean filename for attachment
+              $title = null;
+              //$title = strtolower($file->getTitle()); does not exist
+
+              $reflection = new \ReflectionClass($file);
+              $property = $reflection->getProperty("metadata");
+              $property->setAccessible(true);
+              $meta = $property->getValue($file);
+              if (is_array($meta) && array_key_exists('Title', $meta)) {
+                  $title = $meta['Title'];
+              }
+
+              if (empty($title)) {
+                  $title = uniqid('document_');
+              }
+              $title = preg_replace('/\s+/', '_', $title);
+              $title = preg_replace('/[^a-z0-9\._-]/', '', $title);
+
+              $message->attach(new \Swift_Attachment($file->Output('', 'S'), $title.'.pdf', 'application/pdf'));
+            } else if (file_exists($file)) {
                 if ($file instanceof \Symfony\Component\HttpFoundation\File\UploadedFile) {
                     $message->attach(\Swift_Attachment::fromPath($file->getRealPath()));
                 } else {

@@ -1,6 +1,14 @@
 CHANGE LOG
 ==========
 
+V 4.2.3
+-------
+- Added TCPDF attachments support
+
+V 4.2.2
+-------
+- Added fpdf attchments support
+
 V 4.2.1
 -------
 - Added additional_header field to message sending methods (BC)

@@ -1,9 +1,9 @@
 services:
     notification:
         class: jonasarts\Bundle\NotificationBundle\Notification\Notification
-        arguments:  ["@mailer", "%kernel.root_dir%", "%notification.template%", "%notification.from%", "%notification.sender%", "%notification.reply_to%", "%notification.return_path%", "%notification.subject_prefix%" ]
+        arguments:  ["@mailer", "%kernel.project_dir%", "%notification.template%", "%notification.from%", "%notification.sender%", "%notification.reply_to%", "%notification.return_path%", "%notification.subject_prefix%" ]
         public: true
 
     jonasarts\Bundle\NotificationBundle\Notification\Notification:
-        arguments:  ["@mailer", "%kernel.root_dir%", "%notification.template%", "%notification.from%", "%notification.sender%", "%notification.reply_to%", "%notification.return_path%", "%notification.subject_prefix%" ]
+        arguments:  ["@mailer", "%kernel.project_dir%", "%notification.template%", "%notification.from%", "%notification.sender%", "%notification.reply_to%", "%notification.return_path%", "%notification.subject_prefix%" ]
     jonasarts\Bundle\NotificationBundle\Notification\NotificationInterface: '@notification'

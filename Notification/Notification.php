@@ -33,7 +33,7 @@ class Notification implements NotificationInterface
     /**
      * @var string
      */
-    private $kernel_root_dir;
+    private $kernel_project_dir;
 
     /**
      * configuration parameter 'from' - from address
@@ -82,10 +82,10 @@ class Notification implements NotificationInterface
     /**
      * Constructor
      */
-    public function __construct(\Swift_Mailer $mailer, string $kernel_root_dir, array $parameter_template, $parameter_from, $parameter_sender, $parameter_reply_to, ?string $parameter_return_path, ?string $parameter_subject_prefix)
+    public function __construct(\Swift_Mailer $mailer, string $kernel_project_dir, array $parameter_template, $parameter_from, $parameter_sender, $parameter_reply_to, ?string $parameter_return_path, ?string $parameter_subject_prefix)
     {
         $this->mailer = $mailer;
-        $this->kernel_root_dir = $kernel_root_dir;
+        $this->kernel_project_dir = $kernel_project_dir;
 
         $this->from = $parameter_from;
         $this->sender = $parameter_sender;
@@ -443,7 +443,7 @@ class Notification implements NotificationInterface
 
         /*
         // always embed logo - this needs special processing
-        $file = $this->kernel_root_dir . '/../web/....png';
+        $file = $this->kernel_project_dir . '/../web/....png';
         $logo_src = $message->embed(\Swift_Image::fromPath($file));
         // replace logo_src placeholder in html
         $html = str_replace('%logo_src%', $logo_src, $html);

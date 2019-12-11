@@ -13,11 +13,12 @@
         }
     ],
     "require": {
-        "php": "^7.1",
-        "symfony/config": "^4.0",
-        "symfony/dependency-injection": "^4.0",
+        "php": "^7.2",
+        "symfony/config": "^5.0",
+        "symfony/dependency-injection": "^5.0",
         "symfony/swiftmailer-bundle": "^3.2",
-        "symfony/twig-bundle": "^4.0"
+        "symfony/mailer": "5.0.*",
+        "symfony/twig-pack": "^5.0"
     },
     "autoload": {
         "psr-4": { "jonasarts\\Bundle\\NotificationBundle\\": "" }

@@ -484,6 +484,8 @@ class Notification implements NotificationInterface
                 $title = $this->getAttachmentFileName($title);
 
                 $message->attach(new \Swift_Attachment($file->Output('', 'S'), $title.'.pdf', 'application/pdf'));
+            } else if (get_class($file) == "Swift_Attachment") {
+                $message->attach($file);
             } else if (file_exists($file)) {
                 if ($file instanceof \Symfony\Component\HttpFoundation\File\UploadedFile) {
                     $message->attach(\Swift_Attachment::fromPath($file->getRealPath()));

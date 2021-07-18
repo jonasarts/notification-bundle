@@ -1,9 +1,21 @@
 services:
-    notification:
-        class: jonasarts\Bundle\NotificationBundle\Notification\Notification
-        arguments:  ["@mailer", "%kernel.project_dir%", "%notification.template%", "%notification.from%", "%notification.sender%", "%notification.reply_to%", "%notification.return_path%", "%notification.subject_prefix%" ]
+    swiftmailer-notification:
+        class: jonasarts\Bundle\NotificationBundle\Notification\SwiftmailerNotification
+        arguments:  ["@swiftmailer.mailer", "%kernel.project_dir%", "%notification.template%", "%notification.from%", "%notification.sender%", "%notification.reply_to%", "%notification.return_path%", "%notification.subject_prefix%", "@twig" ]
         public: true
 
-    jonasarts\Bundle\NotificationBundle\Notification\Notification:
-        arguments:  ["@mailer", "%kernel.project_dir%", "%notification.template%", "%notification.from%", "%notification.sender%", "%notification.reply_to%", "%notification.return_path%", "%notification.subject_prefix%" ]
-    jonasarts\Bundle\NotificationBundle\Notification\NotificationInterface: '@notification'
+    jonasarts\Bundle\NotificationBundle\Notification\SwiftmailerNotification:
+        arguments:  ["@swiftmailer.mailer", "%kernel.project_dir%", "%notification.template%", "%notification.from%", "%notification.sender%", "%notification.reply_to%", "%notification.return_path%", "%notification.subject_prefix%", "@twig" ]
+
+
+    mailer-notification:
+        class: jonasarts\Bundle\NotificationBundle\Notification\MailerNotification
+        arguments:  ["@mailer.mailer", "%kernel.project_dir%", "%notification.template%", "%notification.from%", "%notification.sender%", "%notification.reply_to%", "%notification.return_path%", "%notification.subject_prefix%", "@twig" ]
+        public: true
+
+    jonasarts\Bundle\NotificationBundle\Notification\MailerNotification:
+        arguments:  ["@mailer.mailer", "%kernel.project_dir%", "%notification.template%", "%notification.from%", "%notification.sender%", "%notification.reply_to%", "%notification.return_path%", "%notification.subject_prefix%", "@twig" ]
+
+
+    jonasarts\Bundle\NotificationBundle\Notification\NotificationInterface: '@swiftmailer-notification'
+    #jonasarts\Bundle\NotificationBundle\Notification\NotificationInterface: '@mailer-notification'

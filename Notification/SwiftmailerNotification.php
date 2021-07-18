@@ -16,9 +16,9 @@ namespace jonasarts\Bundle\NotificationBundle\Notification;
 use jonasarts\Bundle\NotificationBundle\Notification\NotificationInterface;
 
 /**
- * Notification
+ * SwiftmailerNotification - uses Swift Mailer
  */
-class Notification implements NotificationInterface
+class SwiftmailerNotification implements NotificationInterface
 {
     /**
      * @var \Swift_Mailer;
@@ -82,7 +82,7 @@ class Notification implements NotificationInterface
     /**
      * Constructor
      */
-    public function __construct(\Swift_Mailer $mailer, string $kernel_project_dir, array $parameter_template, $parameter_from, $parameter_sender, $parameter_reply_to, ?string $parameter_return_path, ?string $parameter_subject_prefix)
+    public function __construct(\Swift_Mailer $mailer, string $kernel_project_dir, array $parameter_template, $parameter_from, $parameter_sender, $parameter_reply_to, ?string $parameter_return_path, ?string $parameter_subject_prefix, ?\Twig\Environment $twig_env)
     {
         $this->mailer = $mailer;
         $this->kernel_project_dir = $kernel_project_dir;
@@ -100,6 +100,8 @@ class Notification implements NotificationInterface
         if ($parameter_template['loader'] == 'filesystem') {
             $loader = new \Twig\Loader\FilesystemLoader($parameter_template['path']);
             $this->twig = new \Twig\Environment($loader, array('cache' => false, 'debug' => false, 'use_strict_variables' => false));
+        } elseif ($parameter_template['loader'] == 'clone') {
+            $this->twig = clone $twig_env;
         } else {
             $loader = new \Twig\Loader\ArrayLoader(array());
             $this->twig = new \Twig\Environment($loader, array('cache' => false, 'debug' => false, 'use_strict_variables' => false));
@@ -386,10 +388,16 @@ class Notification implements NotificationInterface
             throw new \Exception('NotificationService.sendMessageA: from address missing');
         }
 
-        $from = $this->from;
-        $sender = $this->sender;
-        $reply_to = $this->reply_to;
-        $return_path = $this->return_path; // not an array!
+        $from = array($this->from['address'] => $this->from['name']);
+        if (!empty($sender)) {
+            $sender = array($this->sender['address'] => $this->sender['name']);
+        }
+        if (!empty($reply_to)) {
+            $reply_to = array($this->reply_to['address'] => $this->reply_to['name']);
+        }
+        if (!empty($return_path)) {
+            $return_path = $this->return_path; // not an array!
+        }
 
         $message = (new \Swift_Message())
             ->setFrom($from) // from

@@ -1,0 +1,5 @@
+services:
+    jonasarts\Bundle\NotificationBundle\Notification\MailerNotification:
+        arguments:  ["@mailer.mailer", "%kernel.project_dir%", "%notification.template%", "%notification.from%", "%notification.sender%", "%notification.reply_to%", "%notification.return_path%", "%notification.subject_prefix%", "@twig" ]
+
+    jonasarts\Bundle\NotificationBundle\Notification\NotificationInterface: '@mailer-notification'

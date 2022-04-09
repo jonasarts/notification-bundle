@@ -1,6 +1,12 @@
 CHANGE LOG
 ==========
 
+V 6.0.2
+-------
+
+- Added missing send()
+- Renamed files from .yml to .yaml
+
 V 6.0.0
 -------
 

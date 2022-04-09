@@ -513,7 +513,8 @@ class MailerNotification implements NotificationInterface
             $message->text($plain);
         }
 
-        $this->numSent++; // += $this->mailer->send($message);
+        $this->mailer->send($message); // finally send the message
+        $this->numSent++;
     }
 
     private function getAttachmentFileName(?string $title): string

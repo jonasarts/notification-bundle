@@ -54,7 +54,6 @@ class NotificationExtension extends Extension
         $container->setParameter('notification.subject_prefix', $config['subject_prefix']);
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $loader->load('services.yml');
-
+        $loader->load('services.yaml');
     }
 }

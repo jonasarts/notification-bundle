@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the jonasarts Notification bundle package.
  *
@@ -26,7 +28,7 @@ class NotificationExtension extends Extension
     /**
      * {@inheritDoc}
      */
-    public function load(array $configs, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container): void
     {
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
@@ -35,18 +37,18 @@ class NotificationExtension extends Extension
         $container->setParameter('notification.template', $config['template']);
         $container->setParameter('notification.template.loader', $config['template']['loader']);
         $container->setParameter('notification.template.path', $config['template']['path']);
-        $container->setParameter('notification.from', array($config['from']['address'] => $config['from']['name']));
+        $container->setParameter('notification.from', array('address' => $config['from']['address'], 'name' => $config['from']['name']));
         if (!empty($config['sender']['address'] && !empty($config['sender']['name']))) {
-            $container->setParameter('notification.sender', array($config['sender']['address'] => $config['sender']['name']));
+            $container->setParameter('notification.sender', array('address' => $config['sender']['address'], 'name' => $config['sender']['name']));
         } else if (!empty($config['sender']['address'])) {
-            $container->setParameter('notification.sender', $config['sender']['address']);
+            $container->setParameter('notification.sender', array('address' => $config['sender']['address']));
         } else {
             $container->setParameter('notification.sender', null);
         }
         if (!empty($config['reply_to']['address']) && !empty($config['reply_to']['name'])) {
-            $container->setParameter('notification.reply_to', array($config['reply_to']['address'] => $config['reply_to']['name']));
+            $container->setParameter('notification.reply_to', array('address' => $config['reply_to']['address'], 'name' => $config['reply_to']['name']));
         } else if (!empty($config['reply_to']['address'])) {
-            $container->setParameter('notification.reply_to', $config['reply_to']['address']);
+            $container->setParameter('notification.reply_to', array('address' => $config['reply_to']['address']));
         } else {
             $container->setParameter('notification.reply_to', null);
         }
@@ -54,7 +56,6 @@ class NotificationExtension extends Extension
         $container->setParameter('notification.subject_prefix', $config['subject_prefix']);
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $loader->load('services.yml');
-
+        $loader->load('services.yaml');
     }
 }

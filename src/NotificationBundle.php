@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the jonasarts Notification bundle package.
  *
@@ -15,4 +17,8 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class NotificationBundle extends Bundle
 {
+    public function getPath(): string
+    {
+        return \dirname(__DIR__);
+    }
 }

@@ -8,7 +8,7 @@ This bundle provides ...
 Installation
 ------------
 
-All the installation instructions are located in the [documentation](https://github.com/jonasarts/notification-bundle/blob/master/Resources/doc/index.md).
+All the installation instructions are located in the [documentation](https://github.com/jonasarts/notification-bundle/blob/master/docs/index.md).
 
 License
 -------

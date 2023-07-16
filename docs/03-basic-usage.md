@@ -1,8 +1,8 @@
 Using the bundle
 ================
 
-Retrieve the Notification service like any other symfony service:
+Retrieve the Notification service like any other symfony service via Dependency Injection.
 
 ```php
-   $notification = $this->get('notification');
+   // \jonasarts\Bundle\NotificationBundle\Notification\NotificationInterface $notification;
 ```

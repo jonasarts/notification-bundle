@@ -26,17 +26,17 @@ class MailerNotification implements NotificationInterface
     /**
      * @var MailerInterface;
      */
-    private $mailer;
+    private MailerInterface $mailer;
 
     /**
      * @var \Twig\Environment
      */
-    private $twig;
+    private ?\Twig\Environment $twig;
 
     /**
      * @var string
      */
-    private $kernel_project_dir;
+    private string $kernel_project_dir;
 
     /**
      * configuration parameter 'from' - from address
@@ -45,21 +45,21 @@ class MailerNotification implements NotificationInterface
      *
      * @var array|string|null
      */
-    private $from;
+    private string|array|null $from;
 
     /**
      * configuration parameter 'sender' - sender address
      *
      * @var array|string|null
      */
-    private $sender;
+    private string|array|null $sender;
 
     /**
      * configuration parameter 'reply_to' - sender address
      *
      * @var array|string|null
      */
-    private $reply_to;
+    private string|array|null $reply_to;
 
     /**
      * configuration parameter 'return_path'
@@ -68,19 +68,19 @@ class MailerNotification implements NotificationInterface
      *
      * @var string|null
      */
-    private $return_path;
+    private ?string $return_path;
 
     /**
      * configuration parameter subject_prefix - subject prefix string
      *
      * @var string|null
      */
-    private $subject_prefix;
+    private ?string $subject_prefix;
 
     /**
      * @var int
      */
-    private $numSent;
+    private int $numSent;
 
     /**
      * Constructor
@@ -123,7 +123,7 @@ class MailerNotification implements NotificationInterface
     }
 
     /**
-     * @var MailerInterface $mailer
+     * @return MailerInterface
      */
     public function getMailer(): MailerInterface
     {
@@ -192,40 +192,43 @@ class MailerNotification implements NotificationInterface
      * @param array|string $to
      * @param string $subject
      * @param array $data
-     * @param array $additonal_headers
-     * @param array $attachments   array w. file paths
+     * @param array $additional_headers
+     * @param array $attachments array w. file paths
+     * @throws \Exception
      */
-    public function sendTemplateMessage(string $template, $to, string $subject, array $data, array $additonal_headers = array(), array $attachments = array())
+    public function sendTemplateMessage(string $template, $to, string $subject, array $data, array $additional_headers = array(), array $attachments = array()): void
     {
-        $this->sendTemplateMessageA($template, array('to' => $to), $subject, $data, $additonal_headers, $attachments);
+        $this->sendTemplateMessageA($template, array('to' => $to), $subject, $data, $additional_headers, $attachments);
     }
 
     /**
      * Send message - based on a template strings (html & txt template string)
      *
-     * @param array $templateStrings   array( html => , txt => )
+     * @param array $templateStrings array( html => , txt => )
      * @param array|string $to
      * @param string $subject
      * @param array $data
-     * @param array $additonal_headers
-     * @param array $attachments       array w. file paths
+     * @param array $additional_headers
+     * @param array $attachments array w. file paths
+     * @throws \Exception
      */
-    public function sendTemplateStringMessage(array $templateStrings, $to, string $subject, array $data, array $additonal_headers = array(), array $attachments = array())
+    public function sendTemplateStringMessage(array $templateStrings, $to, string $subject, array $data, array $additional_headers = array(), array $attachments = array()): void
     {
-        $this->sendTemplateStringMessageA($templateStrings, array('to' => $to), $subject, $data, $additonal_headers, $attachments);
+        $this->sendTemplateStringMessageA($templateStrings, array('to' => $to), $subject, $data, $additional_headers, $attachments);
     }
 
     /**
      * Send message - based on a twig template - with (optional) attachment
      *
      * @param string $template
-     * @param array $recipients    array( array|string, ... )
+     * @param array $recipients array( array|string, ... )
      * @param string $subject
      * @param array $data
-     * @param array $additonal_headers
-     * @param array $attachments   array w. file paths
+     * @param array $additional_headers
+     * @param array $attachments array w. file paths
+     * @throws \Exception
      */
-    public function sendTemplateMessageA($template, array $recipients, string $subject, array $data, array $additonal_headers = array(), array $attachments = array())
+    public function sendTemplateMessageA($template, array $recipients, string $subject, array $data, array $additional_headers = array(), array $attachments = array()): void
     {
         // auto-create variables subject & subject_underline
         if (!array_key_exists('subject', $data)) {
@@ -261,20 +264,21 @@ class MailerNotification implements NotificationInterface
             throw new \Exception('NotificationService.sendTemplateMessageA: no template rendered ('.$template.')');
         }
 
-        $this->sendMessageA($recipients, $subject, $html, $plain, $additonal_headers, $attachments);
+        $this->sendMessageA($recipients, $subject, $html, $plain, $additional_headers, $attachments);
     }
 
     /**
      * Send message - based on a template strings - with (optional) attachment
      *
-     * @param array $templateStrings   array( html => , txt => )
-     * @param array $recipients        array( array|string, ... )
+     * @param array $templateStrings array( html => , txt => )
+     * @param array $recipients array( array|string, ... )
      * @param string $subject
      * @param array $data
-     * @param array $additonal_headers
-     * @param array $attachments       array w. file paths
+     * @param array $additional_headers
+     * @param array $attachments array w. file paths
+     * @throws \Exception
      */
-    public function sendTemplateStringMessageA(array $templateStrings, array $recipients, string $subject, array $data, array $additonal_headers = array(), array $attachments = array())
+    public function sendTemplateStringMessageA(array $templateStrings, array $recipients, string $subject, array $data, array $additional_headers = array(), array $attachments = array()): void
     {
         // auto-create variables subject & subject_underline
         if (!array_key_exists('subject', $data)) {
@@ -322,7 +326,7 @@ class MailerNotification implements NotificationInterface
             throw new \Exception('NotificationService.sendTemplateStringMessageA: no template rendered');
         }
 
-        $this->sendMessageA($recipients, $subject, $html, $plain, $additonal_headers, $attachments);
+        $this->sendMessageA($recipients, $subject, $html, $plain, $additional_headers, $attachments);
     }
 
     /**
@@ -356,9 +360,15 @@ class MailerNotification implements NotificationInterface
      */
 
     /**
+     * @param $to
+     * @param string $subject
+     * @param string|null $html
+     * @param string|null $plain
      * @return void
+     * @throws \ReflectionException
+     * @throws \Exception
      */
-    private function sendMessage($to, string $subject, string $html = null, string $plain = null)
+    private function sendMessage($to, string $subject, string $html = null, string $plain = null): void
     {
         if (!is_array($to) && trim($to) === '') {
             throw new \Exception('NotificationService.sendMessage: recipient address missing');
@@ -368,9 +378,17 @@ class MailerNotification implements NotificationInterface
     }
 
     /**
+     * @param array $recipients
+     * @param string $subject
+     * @param string|null $html
+     * @param string|null $plain
+     * @param array $additonal_headers
+     * @param array $attachments
      * @return void
+     * @throws \ReflectionException
+     * @throws \Exception
      */
-    private function sendMessageA(array $recipients, string $subject, string $html = null, string $plain = null, array $additonal_headers = array(), array $attachments = array())
+    private function sendMessageA(array $recipients, string $subject, string $html = null, string $plain = null, array $additonal_headers = array(), array $attachments = array()): void
     {
         // at least one recipient present?
         if (count($recipients) == 0) {

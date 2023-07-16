@@ -6,32 +6,12 @@ Setting up the bundle
 Execute this console command in your project:
 
 ``` bash
-$ composer require jonasarts/notification-bundle
+composer require jonasarts/notification-bundle
 ```
 
 ## Enable the bundle
 
-Register the bundle in the kernel:
-
-```php
-// app/AppKernel.php
-
-// ...
-class AppKernel extends Kernel
-{
-    // ...
-
-    public function registerBundles()
-    {
-        $bundles = array(
-            // ...
-            new jonasarts\Bundle\NotificationBundle\NotificationBundle(),
-        );
-
-    // ...
-    }
-}
-```
+Composer enables the bundle for you in config/bundles.php
 
 ## Enable the Twig templating engine
 

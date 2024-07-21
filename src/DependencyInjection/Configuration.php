@@ -36,7 +36,7 @@ class Configuration implements ConfigurationInterface
                     ->children()
 
                         ->scalarNode('loader')
-                            ->defaultValue('filesystem')
+                            ->defaultValue('clone')
                             ->end()
                         ->scalarNode('path')
                             ->defaultNull()

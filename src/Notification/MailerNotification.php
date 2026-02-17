@@ -512,11 +512,8 @@ class MailerNotification implements NotificationInterface
 
                 $title = $this->getAttachmentFileName($title);
 
-<<<<<<< HEAD:Notification/Notification.php
-                $message->attach(new \Swift_Attachment($file->Output('', 'S'), $title.'.pdf', 'application/pdf'));
-=======
                 $message->attach($file->Output('', 'S'), $title.'.pdf', 'application/pdf');
->>>>>>> Symfony-6:src/Notification/MailerNotification.php
+
             } else if (get_class($file) == "Swift_Attachment") {
                 $message->attach($file);
             } else if (file_exists($file)) {

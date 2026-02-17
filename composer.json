@@ -13,13 +13,20 @@
         }
     ],
     "require": {
-        "php": ">=7.1",
-        "symfony/config": "^4.0",
-        "symfony/dependency-injection": "^4.0",
-        "symfony/swiftmailer-bundle": "^3.2",
-        "symfony/twig-bundle": "^4.0"
+        "php": ">=8.2",
+        "symfony/config": "^6.0|^7.0",
+        "symfony/dependency-injection": "^6.0|^7.0",
+        "symfony/mailer": "^6.0|^7.0",
+        "twig/twig": "^3.0"
     },
     "autoload": {
-        "psr-4": { "jonasarts\\Bundle\\NotificationBundle\\": "" }
+        "psr-4": {
+            "jonasarts\\Bundle\\NotificationBundle\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "jonasarts\\Bundle\\NotificationBundle\\Tests\\": "tests/"
+        }
     }
 }

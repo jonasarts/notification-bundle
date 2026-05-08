@@ -368,7 +368,7 @@ class MailerNotification implements NotificationInterface
      * @throws \ReflectionException
      * @throws \Exception
      */
-    private function sendMessage($to, string $subject, string $html = null, string $plain = null): void
+    private function sendMessage($to, string $subject, ?string $html = null, ?string $plain = null): void
     {
         if (!is_array($to) && trim($to) === '') {
             throw new \Exception('NotificationService.sendMessage: recipient address missing');
@@ -388,7 +388,7 @@ class MailerNotification implements NotificationInterface
      * @throws \ReflectionException
      * @throws \Exception
      */
-    private function sendMessageA(array $recipients, string $subject, string $html = null, string $plain = null, array $additonal_headers = array(), array $attachments = array()): void
+    private function sendMessageA(array $recipients, string $subject, ?string $html = null, ?string $plain = null, array $additonal_headers = array(), array $attachments = array()): void
     {
         // at least one recipient present?
         if (count($recipients) == 0) {

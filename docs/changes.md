@@ -1,7 +1,7 @@
 CHANGE LOG
 ==========
 
-V 7.0.4
+V 7.0.5
 -------
 
 - Deprecated code cleanup for configuration

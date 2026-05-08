@@ -50,7 +50,6 @@ class Configuration implements ConfigurationInterface
 
                         // default from address
                         ->scalarNode('address')
-                            ->isRequired()
                             ->cannotBeEmpty()
                             ->defaultValue('nobody@domain.tld')
                         ->end()

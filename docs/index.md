@@ -1,6 +1,12 @@
 jonasarts notification-bundle
 =============================
 
+> **⚠️ Retired / abandoned.** This bundle is no longer maintained and has no
+> Symfony 8 / PHP 8.4 port. Use native
+> [`symfony/mailer`](https://symfony.com/doc/current/mailer.html) with
+> `TemplatedEmail` + `mailer.yaml` instead. The pages below describe the legacy
+> v7 bundle and are kept for existing users only.
+
 Installation
 ------------
 

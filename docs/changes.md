@@ -1,6 +1,13 @@
 CHANGE LOG
 ==========
 
+V 7.0.6 — RETIRED / ABANDONED (2026-06-28)
+------------------------------------------
+
+- This bundle is **abandoned** (`composer.json` carries
+  `"abandoned": "symfony/mailer"`). There is no v8 / Symfony 8 port.
+- Use native `symfony/mailer` with `TemplatedEmail` + `mailer.yaml` instead.
+
 V 7.0.5
 -------
 

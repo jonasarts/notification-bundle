@@ -5,6 +5,7 @@
     "homepage": "https://github.com/jonasarts/notification-bundle",
     "type": "symfony-bundle",
     "license": "MIT",
+    "abandoned": "symfony/mailer",
     "authors": [
         {
             "name": "Jonas Hauser",
